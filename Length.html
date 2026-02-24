@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>minimal · length converter</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    body {
+      background: #f1f3f5;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 560px;
+      padding: 2rem 1.8rem;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    h2 {
+      font-weight: 450;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      color: #1e1e2f;
+      margin: 0 0 0.1rem 0;
+      text-align: center;
+    }
+
+    .sub {
+      text-align: center;
+      color: #5b6876;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #e9ecf0;
+      padding-bottom: 0.9rem;
+    }
+
+    .converter-row {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    .unit-block {
+      flex: 1 1 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .unit-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #7b8799;
+      margin-left: 0.2rem;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      background: #f8fafd;
+      border: 1px solid #dee4ec;
+      border-radius: 18px;
+      padding: 0.2rem 0.2rem 0.2rem 0.8rem;
+      transition: 0.15s;
+    }
+    .input-group:focus-within {
+      border-color: #8b9bb5;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.02);
+    }
+
+    .input-group input {
+      flex: 2;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      padding: 0.75rem 0.2rem 0.75rem 0;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #1a2634;
+      outline: none;
+    }
+
+    .input-group input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    .input-group input[type="number"]::-webkit-inner-spin-button,
+    .input-group input[type="number"]::-webkit-outer-spin-button {
+      opacity: 0.4;
+      margin-left: 4px;
+    }
+
+    .input-group select {
+      flex: 1;
+      max-width: 90px;
+      background: white;
+      border: 1px solid #d2dbe8;
+      border-radius: 40px;
+      padding: 0.5rem 0.3rem 0.5rem 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 450;
+      color: #1e2b3c;
+      cursor: pointer;
+      outline: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%234b5e71" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1.1rem;
+      appearance: none;
+    }
+
+    .footnote {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #8f9fb1;
+      border-top: 1px solid #edf2f7;
+      padding-top: 1.2rem;
+    }
+
+    .footnote span {
+      background: #f0f4fa;
+      padding: 0.2rem 0.6rem;
+      border-radius: 40px;
+      color: #2d3f59;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h2>⇄  length</h2>
+  <div class="sub">any unit · any unit</div>
+
+  <div class="converter-row">
+    <!-- left block: source -->
+    <div class="unit-block">
+      <div class="unit-label">from</div>
+      <div class="input-group">
+        <input type="number" id="leftVal" placeholder="0" value="1" step="any">
+        <select id="leftUnit">
+          <option value="mm">mm</option>
+          <option value="cm" selected>cm</option>
+          <option value="m">m</option>
+          <option value="km">km</option>
+          <option value="in">in</option>
+          <option value="ft">ft</option>
+          <option value="yd">yd</option>
+          <option value="mi">mi</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- right block: target -->
+    <div class="unit-block">
+      <div class="unit-label">to</div>
+      <div class="input-group">
+        <input type="number" id="rightVal" placeholder="0" step="any">
+        <select id="rightUnit">
+          <option value="mm">mm</option>
+          <option value="cm">cm</option>
+          <option value="m">m</option>
+          <option value="km">km</option>
+          <option value="in" selected>in</option>
+          <option value="ft">ft</option>
+          <option value="yd">yd</option>
+          <option value="mi">mi</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>type · tap unit · instant</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- conversion factors (relative to 1 meter) -----
+    const factors = {
+      'mm': 0.001,
+      'cm': 0.01,
+      'm': 1,
+      'km': 1000,
+      'in': 0.0254,
+      'ft': 0.3048,
+      'yd': 0.9144,
+      'mi': 1609.344
+    };
+
+    // ----- DOM elements -----
+    const leftVal = document.getElementById('leftVal');
+    const leftUnit = document.getElementById('leftUnit');
+    const rightVal = document.getElementById('rightVal');
+    const rightUnit = document.getElementById('rightUnit');
+
+    // ----- guard flag to avoid event loops -----
+    let updating = false;
+
+    // ----- core conversion: value (number), fromUnit, toUnit -> number -----
+    function convert(value, from, to) {
+      if (isNaN(value) || value === null || value === '') return NaN;
+      const meters = value * factors[from];
+      return meters / factors[to];
+    }
+
+    // ----- update right field using left as source (left value + left unit + right unit) -----
+    function updateRightFromLeft() {
+      if (updating) return;
+      updating = true;
+
+      const rawLeft = leftVal.value.trim();
+      if (rawLeft === '') {
+        rightVal.value = '';
+      } else {
+        const numLeft = parseFloat(rawLeft);
+        if (isNaN(numLeft)) {
+          rightVal.value = '';
+        } else {
+          const from = leftUnit.value;
+          const to = rightUnit.value;
+          const result = convert(numLeft, from, to);
+          // set with reasonable precision (avoid .000000001 artifacts)
+          rightVal.value = Number.isFinite(result) ? parseFloat(result.toFixed(12)) : '';
+        }
+      }
+
+      updating = false;
+    }
+
+    // ----- update left field using right as source (right value + right unit + left unit) -----
+    function updateLeftFromRight() {
+      if (updating) return;
+      updating = true;
+
+      const rawRight = rightVal.value.trim();
+      if (rawRight === '') {
+        leftVal.value = '';
+      } else {
+        const numRight = parseFloat(rawRight);
+        if (isNaN(numRight)) {
+          leftVal.value = '';
+        } else {
+          const from = rightUnit.value;   // right is now the source
+          const to = leftUnit.value;      // left is target
+          const result = convert(numRight, from, to);
+          leftVal.value = Number.isFinite(result) ? parseFloat(result.toFixed(12)) : '';
+        }
+      }
+
+      updating = false;
+    }
+
+    // ----- EVENT LISTENERS -----
+    // left side changes (input or unit) → update right
+    leftVal.addEventListener('input', updateRightFromLeft);
+    leftUnit.addEventListener('change', updateRightFromLeft);
+
+    // right side changes (input or unit) → update left
+    rightVal.addEventListener('input', updateLeftFromRight);
+    rightUnit.addEventListener('change', updateLeftFromRight);
+
+    // ----- initial sync: 1 cm → inch (default left cm, right inch) -----
+    // We call updateRightFromLeft so that right field shows converted value.
+    // (left value is preset to "1" in HTML)
+    updateRightFromLeft();
+
+    // (optional) tiny safeguard: if someone clears left field manually, right becomes empty.
+    // That is already handled by updateRightFromLeft because it checks empty string.
+  })();
+</script>
+
+<!-- extra reliability: when page loads, left=1 cm -> right inch is calculated -->
+<!-- absolutely zero buttons, pure instant conversion -->
+</body>
+</html>
